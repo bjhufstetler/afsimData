@@ -17,6 +17,10 @@ ui <- fluidPage(
     # Show a plot of the generated distribution
     mainPanel(
       # plotlyOutput("plot")
+      mainPanel(
+        tableOutput("contents"),
+        plotly::plotlyOutput("ric")
+      )
       
     )
   )

@@ -8,18 +8,38 @@ server <- function(input, output, session) {
   #                  redraw = TRUE, mode = "immediate")
   # })
   
-  # output$contents <- renderTable({
-  #   # input$file1 will be NULL initially. After the user selects
-  #   # and uploads a file, it will be a data frame with 'name',
-  #   # 'size', 'type', and 'datapath' columns. The 'datapath'
-  #   # column will contain the local filenames where the data can
-  #   # be found.
-  #   inFile <- input$file1
-  #   
-  #   if (is.null(inFile))
-  #     return(NULL)
-  #   
-  #   read.csv(inFile$datapath, header = input$header)
-  # })
+  observeEvent(input$file1, {
+    inFile <<- input$file1
+    afsimData <<- read.csv(inFile$datapath, header = TRUE)
+  })
+  
+  output$contents <- renderTable({
+    dat <- input$file1
+    if (is.null(dat)) return(NULL)
+    afsimData
+  })
+  
+  output$ric <- plotly::renderPlotly({
+    dat <- input$file1
+    if(is.null(dat)) return(NULL)
+    p <- afsimData %>%
+      ggplot2::ggplot() +
+      ggplot2::xlim(-100, 100) +
+      ggplot2::ylim(-100, 100) +
+      #ggplot2::theme_void() +
+      ggplot2::theme(legend.position = "none") +
+      ggplot2::aes(x = I,
+                   y = R) +
+      ggplot2::geom_point(ggplot2::aes(frame = time, ids = time))
+    
+    plotly::animation_opts(p, frame = 1000, transition = 5, easing = "linear", redraw = F, mode = "immediate")
+    p <- plotly::ggplotly(p)
+    
+  })
+  
+  output$dist <- renderPlot({
+    
+    
+  })
   
 }
