@@ -30,7 +30,8 @@ server <- function(input, output, session) {
       ggplot2::theme(legend.position = "none") +
       ggplot2::aes(x = I,
                    y = R) +
-      ggplot2::geom_point(ggplot2::aes(frame = time, ids = time))
+      ggplot2::geom_point(ggplot2::aes(frame = time, ids = time)) +
+      ggplot2::geom_line()
     
     plotly::animation_opts(p, frame = 1000, transition = 5, easing = "linear", redraw = F, mode = "immediate")
     p <- plotly::ggplotly(p)
